@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Startseite - Freiwilligen-Helfer{% endblock %}
+
+{% block body %}
+<div class="hero-section">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold">Freiwilligen-Helfer Plattform</h1>
+        <p class="lead mt-3">Finden Sie passende Einsaetze und helfen Sie mit! Melden Sie sich fuer bevorstehende Veranstaltungen und Einsaetze an.</p>
+        {% if not app.user %}
+        <a href="{{ path('app_register') }}" class="btn btn-light btn-lg mt-3">
+            <i class="bi bi-person-plus"></i> Jetzt registrieren
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="mb-4"><i class="bi bi-calendar-event"></i> Bevorstehende Einsaetze</h2>
+
+    {% if events is empty %}
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Derzeit sind keine bevorstehenden Einsaetze geplant. Schauen Sie spaeter wieder vorbei!
+        </div>
+    {% else %}
+        <div class="row g-4">
+            {% for event in events %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card card-event h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ event.title }}</h5>
+                        <div class="mb-3">
+                            <span class="text-muted">
+                                <i class="bi bi-calendar3"></i> {{ event.date|date('d.m.Y, H:i') }} Uhr
+                            </span><br>
+                            <span class="text-muted">
+                                <i class="bi bi-geo-alt"></i> {{ event.location }}
+                            </span>
+                        </div>
+                        {% if event.description %}
+                        <p class="card-text text-muted">{{ event.description|length > 120 ? event.description|slice(0, 120) ~ '...' : event.description }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-white border-0 pb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% if event.isFullyBooked %}
+                                <span class="badge bg-danger badge-spots">
+                                    <i class="bi bi-x-circle"></i> Ausgebucht
+                                </span>
+                            {% else %}
+                                <span class="badge bg-success badge-spots">
+                                    <i class="bi bi-check-circle"></i> {{ event.availableSpots }} von {{ event.maxParticipants }} Plaetzen verfuegbar
+                                </span>
+                            {% endif %}
+                            <a href="{{ path('app_event_show', {id: event.id}) }}" class="btn btn-outline-primary btn-sm">
+                                Details <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
