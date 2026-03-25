@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ event.title }} - Freiwilligen-Helfer{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ path('app_home') }}">Startseite</a></li>
+            <li class="breadcrumb-item active">{{ event.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="fw-bold mb-3">{{ event.title }}</h1>
+
+                    <div class="row mb-4">
+                        <div class="col-sm-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar3 text-primary fs-4 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Datum</small>
+                                    <strong>{{ event.date|date('d.m.Y, H:i') }} Uhr</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-2">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-geo-alt text-primary fs-4 me-3"></i>
+                                <div>
+                                    <small class="text-muted d-block">Ort</small>
+                                    <strong>{{ event.location }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if event.description %}
+                    <h5>Beschreibung</h5>
+                    <p class="text-muted">{{ event.description|nl2br }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-bold mb-3">Teilnehmer</h5>
+
+                    <div class="display-6 fw-bold mb-1">
+                        {{ event.registrationCount }} / {{ event.maxParticipants }}
+                    </div>
+                    <p class="text-muted mb-3">Angemeldete Helfer</p>
+
+                    {% if event.isFullyBooked %}
+                        <div class="alert alert-danger mb-3">
+                            <i class="bi bi-x-circle-fill"></i> <strong>Ausgebucht</strong><br>
+                            Alle Plaetze sind belegt.
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success mb-3">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>{{ event.availableSpots }} von {{ event.maxParticipants }} Plaetzen verfuegbar</strong>
+                        </div>
+                    {% endif %}
+
+                    {% if app.user %}
+                        {% if isRegistered %}
+                            <p class="text-success fw-bold"><i class="bi bi-check-lg"></i> Sie sind angemeldet!</p>
+                            <form method="post" action="{{ path('app_event_unregister', {id: event.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('unregister' ~ event.id) }}">
+                                <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Moechten Sie Ihre Anmeldung wirklich stornieren?')">
+                                    <i class="bi bi-x-circle"></i> Abmelden
+                                </button>
+                            </form>
+                        {% elseif not event.isFullyBooked %}
+                            <form method="post" action="{{ path('app_event_register', {id: event.id}) }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('register' ~ event.id) }}">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <i class="bi bi-person-plus"></i> Anmelden
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% else %}
+                        {% if not event.isFullyBooked %}
+                        <p class="text-muted mb-2">Bitte melden Sie sich an, um sich zu registrieren.</p>
+                        <a href="{{ path('app_login') }}" class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-box-arrow-in-right"></i> Anmelden
+                        </a>
+                        <a href="{{ path('app_register') }}" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-person-plus"></i> Registrieren
+                        </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

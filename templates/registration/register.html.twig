@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Registrieren - Freiwilligen-Helfer{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="text-center fw-bold mb-4">
+                        <i class="bi bi-person-plus text-primary"></i> Registrieren
+                    </h2>
+                    <p class="text-center text-muted mb-4">
+                        Erstellen Sie ein Konto, um sich fuer Einsaetze anmelden zu koennen.
+                    </p>
+
+                    {{ form_start(registrationForm, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form_label(registrationForm.firstName) }}</label>
+                            {{ form_widget(registrationForm.firstName) }}
+                            {{ form_errors(registrationForm.firstName) }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form_label(registrationForm.lastName) }}</label>
+                            {{ form_widget(registrationForm.lastName) }}
+                            {{ form_errors(registrationForm.lastName) }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">{{ form_label(registrationForm.email) }}</label>
+                        {{ form_widget(registrationForm.email) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">{{ form_label(registrationForm.phone) }}</label>
+                        {{ form_widget(registrationForm.phone) }}
+                        {{ form_errors(registrationForm.phone) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword.first) }}
+                        {{ form_widget(registrationForm.plainPassword.first) }}
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword.second) }}
+                        {{ form_widget(registrationForm.plainPassword.second) }}
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 btn-lg mt-2">
+                        <i class="bi bi-person-plus"></i> Registrieren
+                    </button>
+
+                    {{ form_end(registrationForm) }}
+
+                    <hr class="my-4">
+                    <p class="text-center text-muted mb-0">
+                        Bereits registriert? <a href="{{ path('app_login') }}">Jetzt anmelden</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
